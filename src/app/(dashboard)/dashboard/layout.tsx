@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Icon, Icons } from '@/components/Icons'
 import Image from 'next/image'
+import SignOutButton from '@/components/SignOutButton'
 
 interface layoutProps {
   children: ReactNode
@@ -82,6 +83,8 @@ const layout = async ({ children }: layoutProps) => {
                                 <span className='text-xs text-zinc-400' aria-hidden='true'>{session.user.email}</span>
                             </div>
                         </div>
+
+                        <SignOutButton className='h-full aspect-square'/>
                     </li>
                 </ul>
             </nav>
