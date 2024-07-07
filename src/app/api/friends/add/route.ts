@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         ) as 0 | 1
 
         if(isAlreadyAdded) {
-            return new Response('Already added this user', {status: 400})
+            return new Response('Friend Request already sent', {status: 400})
         }
 
         //is user tries to re-add someone as friend
