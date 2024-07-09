@@ -7,6 +7,7 @@ import { Icon, Icons } from '@/components/Icons'
 import Image from 'next/image'
 import SignOutButton from '@/components/SignOutButton'
 import FriendRequestsSidebarOption from '@/components/FriendRequestsSidebarOption'
+import { fetchRedis } from '@/helpers/redis'
 
 interface layoutProps {
   children: ReactNode
@@ -23,14 +24,20 @@ const sidebarOptions: SidebarOption[] = [
         id: 1,
         name: 'Add friend',
         href: '/dashboard/add',
-        Icon: 'UserPlus'
-    }
+        Icon: 'UserPlus',
+    },
 ]
 
 const layout = async ({ children }: layoutProps) => {
     const session = await getServerSession(authOptions)
-    if(!session) notFound()
-    
+    if(!session) {notFound()}
+
+    const unseenRequestCount = (
+        (await fetchRedis('smembers', 
+            `user:${session.user.id}:incoming_friend_requests`
+        )) as User[]
+    ).length
+     
   return (
     <div className='w-full flex h-screen'>
         <div className='flex h-full max-w-xs grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6'>
@@ -69,7 +76,10 @@ const layout = async ({ children }: layoutProps) => {
                     </li>
 
                     <li>
-                        <FriendRequestsSidebarOption />
+                        <FriendRequestsSidebarOption 
+                            sessionId={session.user.id} 
+                            initialUnseenRequestCount={unseenRequestCount}
+                        />
                     </li>
 
                     <li className='-mx-6 mt-auto flex items-center'>

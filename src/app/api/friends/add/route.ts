@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         //is user tries to re-add someone as friend
         const isAlreadyAdded = await fetchRedis(
             'sismember',
-            `user:${idToAdd}:incomming_friend_requests`,
+            `user:${idToAdd}:incoming_friend_requests`,
             session.user.id
         ) as 0 | 1
 
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
             return new Response('Already friends with this user', {status: 400})
         }
 
-        db.sadd(`user:${idToAdd}:incomming_friend_requests`, session.user.id)
+        db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id)
         
         return new Response('OK')
 
